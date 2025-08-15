@@ -1,0 +1,34 @@
+#define lightPin 2
+#define fanPin 3
+
+String command = "";
+
+void setup() {
+  pinMode(lightPin, OUTPUT);
+  pinMode(fanPin, OUTPUT);
+  Serial.begin(9600); // Bluetooth communication
+}
+
+void loop() {
+  while (Serial.available()) {
+    char c = Serial.read();
+    command += c;
+    delay(5); // Small delay to collect full command
+  }
+
+  command.trim(); // Remove whitespace/newline
+
+  if (command.length() > 0) {
+    if (command == "L1ON") {
+      digitalWrite(lightPin, HIGH);
+    } else if (command == "L1OFF") {
+      digitalWrite(lightPin, LOW);
+    } else if (command == "FANON") {
+      digitalWrite(fanPin, HIGH);
+    } else if (command == "FANOFF") {
+      digitalWrite(fanPin, LOW);
+    }
+    Serial.println("Executed: " + command); // Optional feedback
+    command = ""; // Clear command buffer
+  }
+}
